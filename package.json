@@ -1,0 +1,32 @@
+{
+  "name": "myapp",
+  "version": "1.0.2",
+  "description": "starting from scratch",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "start:dev": "nodemon server.js",
+    "release": "standard-version"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^1.0.3",
+    "body-parser": "1.16.0",
+    "cors": "^2.8.4",
+    "dotenv": "4.0.0",
+    "express": "4.14.0",
+    "jsonwebtoken": "^8.0.1",
+    "mongoose": "4.7.7",
+    "no-console": "^1.0.5",
+    "nodemon": "1.11.0",
+    "passport": "0.3.2",
+    "passport-jwt": "2.2.1",
+    "passport-local": "1.0.0",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "standard-version": "^4.2.0"
+  }
+}
