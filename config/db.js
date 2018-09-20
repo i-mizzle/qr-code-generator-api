@@ -3,9 +3,9 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 module.exports = (config) => {
     const options = {
-        socketOptions: {
-            keepAlive: 1000
-        }
+            keepAlive: 1000,
+            useNewUrlParser: true,
+            useCreateIndex: true
     };
     mongoose.connect(config.db, options, (err, db) => {
         if(err) console.log('Mongoose connection error', err.message);
