@@ -4,9 +4,6 @@ const passport = require('passport');
 // Bootstrap schemas, models
 require("./bootstrap");
 
-// Initialize passport
-require('./config/passport/')(passport);
-
 // App configuration
 require("./serverConfig")(app, passport);
 
