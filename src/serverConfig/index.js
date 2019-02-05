@@ -1,4 +1,3 @@
-require('dotenv').config();
 const bodyParser = require('body-parser');
 const noc = require('no-console');
 const cors = require('cors');

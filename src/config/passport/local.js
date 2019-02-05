@@ -10,15 +10,15 @@ module.exports = new localStratagy({
             let user = await User.findOne({ username });
             if (user) {
                 if (!user.isValidPassword(password)) {
-                    callback(null, false, { "message": "Password is Incorrect!" });
+                    return callback(null, false, { "message": "Password is Incorrect!" });
                 }
             }else {
-                callback(null, false, { "message": "User does not exist!" });
+                return callback(null, false, { "message": "User does not exist!" });
             }
-            callback(null, user, { "message": "Successfully LoggedIn!" });
+            return callback(null, user, { "message": "Successfully LoggedIn!" });
         }
         catch (error) {
-            callback(error, false, { "message": "Successfully Went Wrong!" });
+            return callback(error, false, { "message": "Something Went Wrong!" });
         }
     }
 );
