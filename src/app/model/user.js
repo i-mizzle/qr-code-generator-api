@@ -20,11 +20,13 @@ const userSchema = new mongoose.Schema({
     timestamps: true
 });
 userSchema.set('toJSON', {
-        getters: true, virtuals: false, transform: (doc, ret, options) => {
-            delete ret.__v;
-            return ret;
-        }
-    });
+    getters: true,
+    virtuals: false,
+    transform: (doc, ret, options) => {
+        delete ret.__v;
+        return ret;
+    }
+});
 userSchema.methods.encryptPassword = (password) => {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 };

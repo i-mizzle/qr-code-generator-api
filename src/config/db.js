@@ -11,7 +11,7 @@ module.exports = (config) => {
         if(err) console.log('Mongoose connection error', err.message);
     });
     mongoose.connection.on('connected', function() {
-        console.log('Mongoose connection');
+        console.log('Mongoose connected');
     });
     mongoose.connection.on('disconnected', function () {
         console.log('Mongoose default connection disconnected');

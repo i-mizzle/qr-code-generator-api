@@ -19,4 +19,14 @@ module.exports = {
             audience: 'not sure',
         }
     },
+    test: {
+        db: process.env.DB_TEST,
+        jwt: {
+            secretOrKey: 'TEST_SECRET',
+            algorithm: 'HS256',
+            expiresIn: '1h',
+            issuer: 'jonu',
+            audience: 'not sure',
+        }
+    }
 }[process.env.NODE_ENV || 'development'];
