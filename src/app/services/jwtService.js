@@ -1,8 +1,8 @@
 'use strict';
 const jwt = require("jsonwebtoken");
-const config = require("./../../config/environments");
+const config = require("config")
 module.exports = class jwtService {
-    constructor() {}
+    constructor() { }
     // createToken(user) {
     // let token = this.createJwtToken(user);
     // let refreshToken = jwt.sign({ user }, config.jwt.secretOrKey, {
@@ -14,11 +14,11 @@ module.exports = class jwtService {
     // return [token, refreshToken];
     // }
     createJwtToken(user) {
-        return jwt.sign({ user }, config.jwt.secretOrKey, {
-            algorithm: config.jwt.algorithm,
-            expiresIn: config.jwt.expiresIn,
-            issuer: config.jwt.issuer,
-            audience: config.jwt.audience
+        return jwt.sign({ user }, config.get("jwt.secretOrKey"), {
+            algorithm: config.get("jwt.algorithm"),
+            expiresIn: config.get("jwt.expiresIn"),
+            issuer: config.get("jwt.issuer"),
+            audience: config.get("jwt.audience")
         });
     }
 };

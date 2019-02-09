@@ -1,13 +1,13 @@
 const JwtStrategy = require('passport-jwt').Strategy,
     ExtractJwt = require('passport-jwt').ExtractJwt;
-const config = require("./../environments");
+const config = require("config");
 const opts = {
-    secretOrKey: config.jwt.secretOrKey,
-    issuer: config.jwt.issuer,
-    audience: config.jwt.audience,
+    secretOrKey: config.get("jwt.secretOrKey"),
+    issuer: config.get("jwt.issuer"),
+    audience: config.get("jwt.audience"),
     passReqToCallback: false,
     jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme("jwt")
 };
-module.exports = new JwtStrategy(opts, function(jwt_payload, done) {
+module.exports = new JwtStrategy(opts, function (jwt_payload, done) {
     return done(null, jwt_payload.user, {});
 });

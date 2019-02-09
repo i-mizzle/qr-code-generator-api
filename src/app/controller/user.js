@@ -1,6 +1,6 @@
 'use strict';
 const userHelper = require('./../helper/user');
-const response = require('./../../config/response');
+const response = require('./../responses');
 const passport = require('passport');
 const jwtService = require("./../services/jwtService");
 const mongoose = require("mongoose");

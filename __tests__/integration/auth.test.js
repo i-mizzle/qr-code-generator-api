@@ -16,23 +16,23 @@ describe('/Auth-Middleware', () => {
     });
     describe('SignUp#', () => {
         it('should SignUp succesfully if valid Input Passed', async () => {
-            const res = await request(server).post('/api/signUp').send({ username: "jonu@gmail.com", password: "1234567890" });
+            const res = await request(server).post('/v1/api/signUp').send({ username: "jonu@gmail.com", password: "1234567890" });
             expect(res.status).to.equal(201);
             expect(res.body.data).to.be.an('object').with.a.property('token');
         })
         it('should return status 409 if username already exists', async () => {
-            const res = await request(server).post('/api/signUp').send(userSchema);
+            const res = await request(server).post('/v1/api/signUp').send(userSchema);
             expect(res.status).to.equal(409);
         })
     });
     describe('Login#', () => {
         it('should Login with valid credentials', async () => {
-            const res = await request(server).post('/api/login').send(userSchema);
+            const res = await request(server).post('/v1/api/login').send(userSchema);
             expect(res.status).to.equal(200);
             expect(res.body.data).to.be.an('object').with.a.property('token');
         })
         it('should return 401 if credential are not valid', async () => {
-            const res = await request(server).post('/api/login').send({ username: "a@s.com", password: "sss" });
+            const res = await request(server).post('/v1/api/login').send({ username: "a@s.com", password: "sss" });
             expect(res.status).to.equal(401);
         })
     });
