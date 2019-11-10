@@ -3,15 +3,28 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const userSchema = new mongoose.Schema({
-    username: {
+    name: {
         type: String,
         trim: true,
+    },
+    email: {
+        type: String,
         unique: true
     },
-    password: {
+    phone: {
         type: String,
+        unique:true,
         trim: true
     },
+    business: {
+        businessName: { 
+            type: Boolean 
+        },
+        businesAddress: { 
+            type: String 
+        },
+        products: {}
+      },
     refreshToken: {
         type: String,
         trim: true

@@ -1,7 +1,7 @@
 {
-  "name": "myapp",
-  "version": "1.0.2",
-  "description": "starting from scratch",
+  "name": "airhaul-user-api",
+  "version": "1.0.0",
+  "description": "Backend API to serve files to airhaul-user frontend application",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -20,6 +20,7 @@
     "jsonwebtoken": "^8.3.0",
     "mongoose": "5.2.16",
     "no-console": "^1.0.5",
+    "nodemon": "^1.18.4",
     "passport": "0.4.0",
     "passport-jwt": "4.0.0",
     "passport-local": "1.0.0",

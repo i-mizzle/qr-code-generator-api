@@ -1,6 +1,6 @@
 {
     "database": {
-        "url": ""
+        "url": "mongodb://localhost/airhaul"
     },
     "jwt": {
         "secretOrKey": "DEV_SECRET",
