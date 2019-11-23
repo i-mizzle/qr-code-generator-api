@@ -16,6 +16,17 @@ const userSchema = new mongoose.Schema({
         unique:true,
         trim: true
     },
+    password: {
+        type: String,
+        trim: true
+    },
+    confirmationCode: {
+        type: String,
+    },
+    confirmed:{
+        type:Boolean,
+        default: false
+    },
     business: {
         businessName: { 
             type: Boolean 
@@ -23,7 +34,7 @@ const userSchema = new mongoose.Schema({
         businesAddress: { 
             type: String 
         },
-        products: {}
+        products: []
       },
     refreshToken: {
         type: String,

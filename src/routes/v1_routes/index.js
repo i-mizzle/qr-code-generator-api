@@ -5,7 +5,8 @@ const isAuthenticated = require("./../../middlewares/isAuthenticated");
 
 // add route
 router.post('/login', user.login);
-router.post('/signUp', user.signUp);
+router.post('/signup', user.signUp);
+router.put('/confirm', user.confirm);
 router.post('/me', isAuthenticated, user.me);
 
 module.exports = router
