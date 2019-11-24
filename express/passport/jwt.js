@@ -6,7 +6,7 @@ const opts = {
     issuer: config.get("jwt.issuer"),
     audience: config.get("jwt.audience"),
     passReqToCallback: false,
-    jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme("jwt")
+    jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme("Bearer")
 };
 module.exports = new JwtStrategy(opts, function (jwt_payload, done) {
     return done(null, jwt_payload.user, {});

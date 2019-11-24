@@ -1,11 +1,12 @@
 'use strict';
 
 const mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+var ObjectId = Schema.Types.ObjectId;
 const bcrypt = require('bcrypt');
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
-        trim: true,
     },
     email: {
         type: String,
@@ -18,7 +19,6 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        trim: true
     },
     confirmationCode: {
         type: String,
@@ -27,15 +27,32 @@ const userSchema = new mongoose.Schema({
         type:Boolean,
         default: false
     },
+    userType: {
+        type: String,
+        enum : ['SYSTEM_ADMIN','USER','AIRLINE_ADMIN'],
+        default: 'USER'
+    },
+    airline: {
+        type: ObjectId,
+        ref: 'airlines'
+    },
     business: {
         businessName: { 
-            type: Boolean 
+            type: String 
         },
         businesAddress: { 
             type: String 
         },
         products: []
       },
+    shipments: [
+        {
+            shipmentId: { 
+                type: ObjectId, 
+                ref: 'shipments' 
+            }
+        }
+    ],
     refreshToken: {
         type: String,
         trim: true
