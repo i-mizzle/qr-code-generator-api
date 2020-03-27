@@ -30,7 +30,8 @@ module.exports = {
                 name: user.name,
                 businessName: user.business.businessName,
                 email: user.email,
-                phone: user.phone
+                phone: user.phone,
+                userType: user.userType
              });
         })(req, res);
     },
@@ -63,11 +64,13 @@ module.exports = {
                     }
                 }
                 await user.save();
-                if(mailer.sendEmail({
-                    mailTo: user.email,
-                    subject: 'Welcome to Airhaul',
-                    message: 'Follow this link to confirm your account<br> airhaul.com.ng/activation/'+ user.confirmationCode
-                })){
+                if(mailer.sendEmail(
+                    {
+                        mailTo: user.email,
+                        subject: 'Welcome to Airhaul',
+                        message: 'Follow this link to confirm your account<br> airhaul.com.ng/activation/'+ user.confirmationCode
+                    }
+                )){
                     return response.created(res, { email: user.email });
                 }
                 
@@ -91,8 +94,6 @@ module.exports = {
                 user.confirmed = true
 
                 await user.save();
-                // let token = await new jwtService().createJwtToken({ id: user._id, email: user.username });
-                // return response.created(res, { token, email: user.email });
                 return response.ok(res, { user });
             } else {
                 return response.conflict(res, { message: 'user not found or account already confirmed'});

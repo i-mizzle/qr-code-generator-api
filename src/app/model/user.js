@@ -15,7 +15,6 @@ const userSchema = new mongoose.Schema({
     phone: {
         type: String,
         unique:true,
-        trim: true
     },
     password: {
         type: String,
@@ -29,30 +28,19 @@ const userSchema = new mongoose.Schema({
     },
     userType: {
         type: String,
-        enum : ['SYSTEM_ADMIN','USER','AIRLINE_ADMIN'],
-        default: 'USER'
+        enum : ['SYSTEM_ADMIN','TRAINEE','ORG_ADMIN'],
+        default: 'TRAINEE'
     },
-    airline: {
-        type: ObjectId,
-        ref: 'airlines'
-    },
-    business: {
-        businessName: { 
-            type: String 
+    organization: {
+        organization: {
+            type: ObjectId,
+            ref: 'Organizations'
         },
-        businesAddress: { 
-            type: String 
-        },
-        products: []
-      },
-    shipments: [
-        {
-            shipmentId: { 
-                type: ObjectId, 
-                ref: 'shipments' 
-            }
+        role: {
+            type: String,
+            enum: ['ADMIN']
         }
-    ],
+    },
     refreshToken: {
         type: String,
         trim: true

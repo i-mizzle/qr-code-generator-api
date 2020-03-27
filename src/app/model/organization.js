@@ -4,16 +4,11 @@ const mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var ObjectId = Schema.Types.ObjectId;
 // const bcrypt = require('bcrypt');
-const airlineSchema = new mongoose.Schema({
-    airlineName:{
+const organizationSchema = new mongoose.Schema({
+    organizationName:{
         type: String,  
     },
-    airlineType: {
-        type: String,
-        enum : ['CARGO','PASSENGER','PRIVATE'],
-        default: 'CARGO'
-    },
-    airlineAdmins: [
+    invitees: [
         {
             name: {
                 type:String
@@ -23,24 +18,20 @@ const airlineSchema = new mongoose.Schema({
             },
             email:{
                 type: String
+            },
+            signedUp: {
+                type: Boolean,
+                default: false
+            },
+            signUpCode: {
+                type: String
             }
         }
-    ],
-    planes:[ 
-        {
-           name: { type:String },
-           planeType: { type:String },
-           model: { type:String },
-           capacity: { type:Number }
-        }
-    ],
-    routes: [
-        { routeId: { type: String } }
     ]
 }, {
     timestamps: true
 });
-airlineSchema.set('toJSON', {
+organizationSchema.set('toJSON', {
     getters: true,
     virtuals: false,
     transform: (doc, ret, options) => {
@@ -54,4 +45,4 @@ airlineSchema.set('toJSON', {
 // userSchema.methods.isValidPassword = function isValidPassword(password) {
 //     return bcrypt.compareSync(password, this.password);
 // };
-module.exports = mongoose.model('Airline', airlineSchema);
+module.exports = mongoose.model('Organization', organizationSchema);

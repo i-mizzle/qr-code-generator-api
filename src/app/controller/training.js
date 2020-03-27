@@ -26,28 +26,8 @@ module.exports = {
             return response.error(res, error);
         }
     },
-    acceptShipment: async (req, res) => {
-        if (req.user.userType !== "AIRLINE_ADMIN") {
-            return response.conflict(res, { message: 'Only an airline administrator can perform this action'});
-        }
-        try {
-            let shipment = await Shipment.findOne(
-                { 
-                    _id: req.params.shipmentId,  
-                }
-            );
-            if(shipment){
-                shipment.airline = req.body.airlineId
-                shipment.status = 'ACCEPTED'
-                shipment.eta = new Date(req.body.eta)
-                await shipment.save();
-                return response.ok(res, { message: 'shipment accepted by airline' });
-            }
-        } catch (error) {
-            return response.error(res, error);
-        }
-    },
-    fetch: async (req, res) => {
+
+    fetchAll: async (req, res) => {
         try{
             let shipments = await Shipment.find();
             return response.ok(res, { shipments: shipments });
@@ -62,5 +42,11 @@ module.exports = {
         } catch(error) {
              response.error(res, error);
         }
+    },
+    assignToUsers: async (req, res) => {
+
+    },
+    update: async (req, res) => {
+
     }
 }

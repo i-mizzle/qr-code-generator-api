@@ -4,7 +4,7 @@ const response = require('../responses');
 const mongoose = require("mongoose");
 
 const User = mongoose.model('User');
-const Airline = mongoose.model('Airline');
+const Airline = mongoose.model('Organization');
 
 module.exports = {
     create: async (req, res) => {
@@ -42,5 +42,18 @@ module.exports = {
         } catch(error) {
              response.error(res, error);
         }
+    },
+    accept: async (req, res) => {
+        if (req.user.userType !== "ORG_ADMIN") {
+            return response.conflict(res, { message: 'Only an administrator of this airline can perform this action'});
+        }
+        try {
+           
+        } catch (error) {
+            return response.error(res, error);
+        }
+    },
+    inviteUser: async (req, res) => {
+        
     }
 }

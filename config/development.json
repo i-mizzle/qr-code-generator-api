@@ -1,6 +1,6 @@
 {
     "database": {
-        "url": "mongodb://localhost/airhaul"
+        "url": "mongodb://localhost/ngoassessment"
     },
     "jwt": {
         "secretOrKey": "DEV_SECRET",
