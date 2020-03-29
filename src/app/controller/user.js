@@ -1,5 +1,7 @@
 'use strict';
 const userHelper = require('./../helper/user');
+const helpers = require('./../helper/helper');
+const organizationHelper = require('./../helper/organization');
 const mailer = require('./../helper/mailer');
 const response = require('./../responses');
 const passport = require('passport');
@@ -7,7 +9,7 @@ const jwtService = require("./../services/jwtService");
 const mongoose = require("mongoose");
 
 const User = mongoose.model('User');
-const Airline = mongoose.model('Airline');
+const Organization = mongoose.model('Organization');
 module.exports = {
     // login controller
     login: async (req, res) => {
@@ -28,7 +30,7 @@ module.exports = {
                 token, 
                 userId: user._id,
                 name: user.name,
-                businessName: user.business.businessName,
+                organization: user.organization,
                 email: user.email,
                 phone: user.phone,
                 userType: user.userType
@@ -43,31 +45,52 @@ module.exports = {
                     { 
                         email: req.body.email, 
                         phone: req.body.phone,
-                        userType: req.body.userType
+                        userType: req.body.userType,
+                        name: req.body.name
                     }
                 );
                 user.password = user.encryptPassword(req.body.password);
-                user.confirmationCode = userHelper.generateRandomCode(35);
+                user.confirmationCode = helpers.generateRandomCode(35);
+                if(req.body.userType === 'TRAINEE') {
+                    user.organizations = req.body.organizations
+                }
 
-                if(req.body.userType === 'AIRLINE_ADMIN') {
-                    if(!req.body.airline || req.body.airline === ""){
-                        return response.conflict(res, { message: 'Please provide an airline for this Airline Admin'});
-                    } else {
-                        let airlineDetails = await Airline.findOne({_id: req.body.airline})
-                        let inviteeEmails =  []
-                        for(let i = 0; i < airlineDetails.airlineAdmins.length; i ++){
-                            inviteeEmails.push(airlineDetails.airlineAdmins[i].email)
-                        }
-                        if(!inviteeEmails.includes(req.body.email)){
-                            return response.conflict(res, { message: 'Sorry, you have not been invited to be an administrator of this airline'});
+                if(req.body.userType === 'ORG_ADMIN') {
+                    // if the signup is as an organization and an organization ID is not provided, create the organization with the org objsect supplied
+                    if(!req.body.organizationId){
+                        let createdOrganization = await organizationHelper.createOrganization(req.body.organization)
+                        if(!createdOrganization){
+                            return response.error(res, {message: "Sorry, there was a problem creating the organization"})
+                        }    
+                        user.organization = {
+                            organization: createdOrganization._id.toString(),
+                            role: req.body.organization.role
                         }
                     }
+    
+                    // if the signup is as an organization and an organization ID is provided, create the user as admin for that organization
+                    if(req.body.organizationId && req.body.organizationId !== '') {
+                        let organizationDetails = await Organization.findOne({_id: req.body.organizationId})
+                        let inviteeEmails =  []
+                        for(let i = 0; i < organizationDetails.invitees.length; i ++){
+                            inviteeEmails.push(organizationDetails[i].email)
+                        }
+                        if(!inviteeEmails.includes(req.body.email)){
+                            return response.conflict(res, { message: 'Sorry, you have not been invited to be an administrator of this organization'});
+                        }
+                    }
+
+                    if (req.body.organizationId && req.body.organizationId === ''){
+                        return response.conflict(res, { message: 'Please provide an Organization for this Organization Admin'});
+                    }
                 }
+                
+
                 await user.save();
                 if(mailer.sendEmail(
                     {
                         mailTo: user.email,
-                        subject: 'Welcome to Airhaul',
+                        subject: 'Welcome to The Assessor',
                         message: 'Follow this link to confirm your account<br> airhaul.com.ng/activation/'+ user.confirmationCode
                     }
                 )){
@@ -87,10 +110,6 @@ module.exports = {
                 confirmationCode: req.params.confirmationCode, 
                 confirmed: false });
             if (user) {
-                user.name = req.body.name
-                user.business.businessName = req.body.business.businessName
-                user.business.businessAddress = req.body.business.businessAddress
-                user.business.products = req.body.business.products 
                 user.confirmed = true
 
                 await user.save();
@@ -102,7 +121,7 @@ module.exports = {
             return response.error(res, error);
         }
     },
-    me: async (req, res) => {
+    getUserDetails: async (req, res) => {
         try {
             let user = await userHelper.find({ _id: req.user.id });
             return response.ok(res, user);

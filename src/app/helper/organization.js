@@ -11,16 +11,16 @@ module.exports = {
     },
     createOrganization: async (inputData) => {
         try {
-            let airline = new Airline(
+            let organization = new Organization(
                 { 
-                    organizationName: inputData.airlineName, 
-                    invitees: inputData.airlineAdmins,
+                    organizationName: inputData.organizationName, 
+                    invitees: inputData.invitees,
                 }
             );
-            await airline.save();
-            return true;
+            await organization.save();
+            return organization;
         } catch (error) {
-            return response.error(res, error);
+            return false;
         }
     }
 };

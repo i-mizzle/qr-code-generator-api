@@ -4,7 +4,7 @@ const response = require('../responses');
 const mongoose = require("mongoose");
 
 const User = mongoose.model('User');
-const Airline = mongoose.model('Organization');
+const Organization = mongoose.model('Organization');
 
 module.exports = {
     create: async (req, res) => {
@@ -12,40 +12,37 @@ module.exports = {
             return response.conflict(res, { message: 'Only an administrator can perform this item'});
         }
         try {
-            let airline = new Airline(
+            let organization = new Organization(
                 { 
-                    airlineName: req.body.airlineName, 
-                    airlineType: req.body.airlineType,
-                    airlineAdmins: req.body.airlineAdmins,
-                    planes: req.body.planes,
-                    routes: req.body.routes,
+                    organizationName: req.body.name, 
+                    invitees: req.body.invitees,
                 }
             );
-            await airline.save();
-            return response.created(res, { airlineDetails: airline });
+            await organization.save();
+            return response.created(res, { organizationDetails: organization });
         } catch (error) {
             return response.error(res, error);
         }
     },
     fetch: async (req, res) => {
         try{
-            let airlines = await Airline.find();
-            return response.ok(res, { airlines: airlines });
+            let organizations = await Organization.find();
+            return response.ok(res, { organizations: organizations });
         } catch(error) {
              response.error(res, error);
         }
     },
     fetchOne: async (req, res) => {
         try{
-            let airline = await Airline.findOne({ _id: req.params.airlineId });
-            return response.ok(res, { airlineDetails: airline });
+            let organization = await Organization.findOne({ _id: req.params.organizationId });
+            return response.ok(res, { organizationDetails: Organization });
         } catch(error) {
              response.error(res, error);
         }
     },
     accept: async (req, res) => {
         if (req.user.userType !== "ORG_ADMIN") {
-            return response.conflict(res, { message: 'Only an administrator of this airline can perform this action'});
+            return response.conflict(res, { message: 'Only an administrator of this organization can perform this action'});
         }
         try {
            

@@ -9,15 +9,18 @@ const trainingSchema = new mongoose.Schema({
         type: ObjectId, 
         ref: 'Organizations' 
     },
-    shipmentSource: {
+    name: {
         type: String,
     },
-    shipmentDestination: {
+    description: {
         type: String,
     },
-    handlingInstructions: {
-        type: String,
-    },
+    prerequisites: [
+        {
+            type: ObjectId, 
+            ref: 'Training'
+        },
+    ],
     status: {
         type: String,
         enum : ['ONGOING','ENDED','PENDING'],
@@ -26,7 +29,7 @@ const trainingSchema = new mongoose.Schema({
     attendees: [
         {
             type: ObjectId, 
-            ref: 'Users' 
+            ref: 'User' 
         }
     ],
     startDate: {
@@ -35,16 +38,16 @@ const trainingSchema = new mongoose.Schema({
     endDate: {
         type: Date
     },
-    prerequsite: {
-        isPrerequisite: {
-            type: Boolean,
-            default: false
-        },
-        isPrerequisiteFor: {
-            type: ObjectId, 
-            ref: 'Trainings'
-        }
-    }
+    // prerequsite: {
+    //     isPrerequisite: {
+    //         type: Boolean,
+    //         default: false
+    //     },
+    //     isPrerequisiteFor: {
+    //         type: ObjectId, 
+    //         ref: 'Training'
+    //     }
+    // }
 }, {
     timestamps: true
 });
@@ -62,4 +65,4 @@ trainingSchema.set('toJSON', {
 // userSchema.methods.isValidPassword = function isValidPassword(password) {
 //     return bcrypt.compareSync(password, this.password);
 // };
-module.exports = mongoose.model('Trainings', trainingSchema);
+module.exports = mongoose.model('Training', trainingSchema);

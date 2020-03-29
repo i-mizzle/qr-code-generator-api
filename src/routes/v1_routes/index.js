@@ -1,27 +1,30 @@
 'use strict';
 const router = require('express').Router();
 const user = require('../../app/controller/user');
-const shipment = require('../../app/controller/shipment');
-const airline = require('../../app/controller/airline');
+const organization = require('../../app/controller/organization');
+const training = require('../../app/controller/training');
+const assessment = require('../../app/controller/assessment');
 const isAuthenticated = require("./../../middlewares/isAuthenticated");
+const isConfirmed = require("./../../middlewares/isConfirmed");
 
 // add route
 router.post('/login', user.login);
 router.post('/signup', user.signUp);
 router.put('/confirm/:confirmationCode', user.confirm);
-router.get('/me', isAuthenticated, user.me);
+router.get('/user', isAuthenticated, user.getUserDetails);
 
-router.post('/shipment', isAuthenticated, shipment.create);
-router.get('/shipment', isAuthenticated, shipment.fetch);
-router.get('/shipment/:shipmentId', isAuthenticated, shipment.fetchOne);
-router.put('/shipment/:shipmentId', isAuthenticated, shipment.acceptShipment);
+router.post('/organization', isAuthenticated, organization.create);
+router.get('/organization', organization.fetch);
+router.get('/organization/:organizationId', organization.fetchOne);
 
-router.post('/airline', isAuthenticated, airline.create);
-router.get('/airline', airline.fetch);
-router.get('/airline/:airlineId', airline.fetchOne);
+router.post('/training/:organizationId', isAuthenticated, isConfirmed, training.create);
+router.get('/training/:trainingId', isAuthenticated, isConfirmed, training.fetchOne);
+router.get('/training', isAuthenticated, isConfirmed, training.fetchAll);
+router.get('/training/organization/:organizationId', isAuthenticated, isConfirmed, training.fetchAllForOrganization);
+router.post('/training/assign/:trainingId', isAuthenticated, isConfirmed, training.assignToUsers);
+router.get('/training/update/:trainingId', isAuthenticated, isConfirmed, training.update);
 
-router.post('/airline', isAuthenticated, airline.accept);
-router.post('/airline', isAuthenticated, airline.completeShipment);
+router.post('/assessment/training/:trainingId', isAuthenticated, isConfirmed, assessment.create);
 
 
 module.exports = router

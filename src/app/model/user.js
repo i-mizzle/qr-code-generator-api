@@ -31,10 +31,16 @@ const userSchema = new mongoose.Schema({
         enum : ['SYSTEM_ADMIN','TRAINEE','ORG_ADMIN'],
         default: 'TRAINEE'
     },
+    organizations: [
+        {
+            type: ObjectId,
+            ref: 'Organization'
+        }
+    ],
     organization: {
         organization: {
             type: ObjectId,
-            ref: 'Organizations'
+            ref: 'Organization'
         },
         role: {
             type: String,
