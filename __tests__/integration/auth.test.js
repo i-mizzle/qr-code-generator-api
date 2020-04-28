@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 describe('/Auth-Middleware', () => {
     let server;
     let User;
-    let userSchema = { username: "jonu.1504@gmail.com", password: "1234567890" }
+    let userSchema = { email: "jackrobinson@gmail.com", password: "Abcd1234!" }
     before(async () => {
         server = require("./../../server");
         User = mongoose.model('User');
@@ -12,16 +12,20 @@ describe('/Auth-Middleware', () => {
 
         const user = new User();
         const password = user.encryptPassword(userSchema.password);
-        await User.create({ username: userSchema.username, password: password });
+        await User.create({ email: userSchema.email, password: password });
     });
     describe('SignUp#', () => {
         it('should SignUp succesfully if valid Input Passed', async () => {
-            const res = await request(server).post('/v1/api/signUp').send({ username: "jonu@gmail.com", password: "1234567890" });
+            const res = await request(server).post('/v1/api/signup').send({ 
+                email: "jonu@gmail.com", 
+                password: "1234567890", 
+                phone: "08012345678",
+                name: "John Doe" 
+            });
             expect(res.status).to.equal(201);
-            expect(res.body.data).to.be.an('object').with.a.property('token');
         })
         it('should return status 409 if username already exists', async () => {
-            const res = await request(server).post('/v1/api/signUp').send(userSchema);
+            const res = await request(server).post('/v1/api/signup').send(userSchema);
             expect(res.status).to.equal(409);
         })
     });

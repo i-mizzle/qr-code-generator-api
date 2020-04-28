@@ -1,7 +1,7 @@
 {
-  "name": "ngo-assessment-api",
+  "name": "gladepay-qrcode-api",
   "version": "1.0.0",
-  "description": "Backend API to serve files to ngo-assessment-platform frontend application",
+  "description": "Backend API to generate and save qrcodes to s3",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.663.0",
     "bcrypt": "^3.0.7",
     "body-parser": " 1.18.3",
     "config": "^3.0.1",
@@ -20,13 +21,16 @@
     "jsonwebtoken": "^8.3.0",
     "mailgun-js": "^0.22.0",
     "mongoose": "^5.7.11",
+    "multer": "^1.4.2",
+    "multer-s3": "^2.9.0",
     "no-console": "^1.0.5",
     "nodemailer": "^6.3.1",
     "nodemon": "^1.18.4",
     "passport": "0.4.0",
     "passport-jwt": "4.0.0",
     "passport-local": "1.0.0",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "qrcode": "^1.4.4"
   },
   "devDependencies": {
     "chai": "^4.2.0",

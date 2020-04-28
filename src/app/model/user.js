@@ -19,33 +19,10 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
     },
-    confirmationCode: {
-        type: String,
-    },
-    confirmed:{
-        type:Boolean,
-        default: false
-    },
     userType: {
         type: String,
-        enum : ['SYSTEM_ADMIN','TRAINEE','ORG_ADMIN'],
-        default: 'TRAINEE'
-    },
-    organizations: [
-        {
-            type: ObjectId,
-            ref: 'Organization'
-        }
-    ],
-    organization: {
-        organization: {
-            type: ObjectId,
-            ref: 'Organization'
-        },
-        role: {
-            type: String,
-            enum: ['ADMIN']
-        }
+        enum : ['SYSTEM_ADMIN','USER'],
+        default: 'SYSTEM_ADMIN'
     },
     refreshToken: {
         type: String,

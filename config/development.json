@@ -1,6 +1,6 @@
 {
     "database": {
-        "url": "mongodb://localhost/ngo-assessment"
+        "url": "mongodb://localhost/gladepay-qrcodes"
     },
     "jwt": {
         "secretOrKey": "DEV_SECRET",
@@ -8,5 +8,9 @@
         "audience": "JONU",
         "expiresIn": "24h",
         "algorithm":"HS256"
+    },
+    "awsS3":{
+        "AWS_ACCESS_KEY_ID": "AKIATMNWR5XCPELZQXL4",
+        "AWS_SECRET_ACCESS_KEY": "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" 
     }
 }

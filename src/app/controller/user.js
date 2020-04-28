@@ -1,22 +1,17 @@
 'use strict';
 const userHelper = require('./../helper/user');
 const helpers = require('./../helper/helper');
-const organizationHelper = require('./../helper/organization');
-const mailer = require('./../helper/mailer');
 const response = require('./../responses');
 const passport = require('passport');
 const jwtService = require("./../services/jwtService");
 const mongoose = require("mongoose");
-
 const User = mongoose.model('User');
-const Organization = mongoose.model('Organization');
+
 module.exports = {
     // login controller
     login: async (req, res) => {
-        let user = await User.findOne({ email: req.body.email, confirmed: true });
-        if (!user) {
-            return response.conflict(res, { message: 'This account has not been confirmed.'});
-        }
+        let user = await User.findOne({ email: req.body.email });
+        console.log(user)
         passport.authenticate('local', async (err, user, info) => {
             if (err) { return response.error(res, err); }
             if (!user) { return response.unAuthorize(res, info); }
@@ -25,16 +20,16 @@ module.exports = {
             var userDetails = user
             delete userDetails.password;
             delete userDetails.confirmationCode;
-            
-            return response.ok(res, { 
-                token, 
+
+            return response.ok(res, {
+                token,
                 userId: user._id,
                 name: user.name,
                 organization: user.organization,
                 email: user.email,
                 phone: user.phone,
                 userType: user.userType
-             });
+            });
         })(req, res);
     },
     signUp: async (req, res) => {
@@ -42,8 +37,8 @@ module.exports = {
             let user = await User.findOne({ email: req.body.email });
             if (!user) {
                 let user = new User(
-                    { 
-                        email: req.body.email, 
+                    {
+                        email: req.body.email,
                         phone: req.body.phone,
                         userType: req.body.userType,
                         name: req.body.name
@@ -51,54 +46,48 @@ module.exports = {
                 );
                 user.password = user.encryptPassword(req.body.password);
                 user.confirmationCode = helpers.generateRandomCode(35);
-                if(req.body.userType === 'TRAINEE') {
+                if (req.body.userType === 'TRAINEE') {
                     user.organizations = req.body.organizations
                 }
 
-                if(req.body.userType === 'ORG_ADMIN') {
+                if (req.body.userType === 'ORG_ADMIN') {
                     // if the signup is as an organization and an organization ID is not provided, create the organization with the org objsect supplied
-                    if(!req.body.organizationId){
+                    if (!req.body.organizationId) {
                         let createdOrganization = await organizationHelper.createOrganization(req.body.organization)
-                        if(!createdOrganization){
-                            return response.error(res, {message: "Sorry, there was a problem creating the organization"})
-                        }    
+                        if (!createdOrganization) {
+                            return response.error(res, { message: "Sorry, there was a problem creating the organization" })
+                        }
                         user.organization = {
                             organization: createdOrganization._id.toString(),
                             role: req.body.organization.role
                         }
                     }
-    
+
                     // if the signup is as an organization and an organization ID is provided, create the user as admin for that organization
-                    if(req.body.organizationId && req.body.organizationId !== '') {
-                        let organizationDetails = await Organization.findOne({_id: req.body.organizationId})
-                        let inviteeEmails =  []
-                        for(let i = 0; i < organizationDetails.invitees.length; i ++){
+                    if (req.body.organizationId && req.body.organizationId !== '') {
+                        let organizationDetails = await Organization.findOne({ _id: req.body.organizationId })
+                        let inviteeEmails = []
+                        for (let i = 0; i < organizationDetails.invitees.length; i++) {
                             inviteeEmails.push(organizationDetails[i].email)
                         }
-                        if(!inviteeEmails.includes(req.body.email)){
-                            return response.conflict(res, { message: 'Sorry, you have not been invited to be an administrator of this organization'});
+                        if (!inviteeEmails.includes(req.body.email)) {
+                            return response.conflict(res, { message: 'Sorry, you have not been invited to be an administrator of this organization' });
                         }
                     }
 
-                    if (req.body.organizationId && req.body.organizationId === ''){
-                        return response.conflict(res, { message: 'Please provide an Organization for this Organization Admin'});
+                    if (req.body.organizationId && req.body.organizationId === '') {
+                        return response.conflict(res, { message: 'Please provide an Organization for this Organization Admin' });
                     }
                 }
-                
+
 
                 await user.save();
-                if(mailer.sendEmail(
-                    {
-                        mailTo: user.email,
-                        subject: 'Welcome to The Assessor',
-                        message: 'Follow this link to confirm your account<br> airhaul.com.ng/activation/'+ user.confirmationCode
-                    }
-                )){
-                    return response.created(res, { email: user.email });
-                }
-                
+
+                return response.created(res, { email: user.email });
+
+
             } else {
-                return response.conflict(res, { message: 'Account already exists for email: '+ user.email});
+                return response.conflict(res, { message: 'Account already exists for email: ' + user.email });
             }
         } catch (error) {
             return response.error(res, error);
@@ -106,16 +95,17 @@ module.exports = {
     },
     confirm: async (req, res) => {
         try {
-            let user = await User.findOne({ 
-                confirmationCode: req.params.confirmationCode, 
-                confirmed: false });
+            let user = await User.findOne({
+                confirmationCode: req.params.confirmationCode,
+                confirmed: false
+            });
             if (user) {
                 user.confirmed = true
 
                 await user.save();
                 return response.ok(res, { user });
             } else {
-                return response.conflict(res, { message: 'user not found or account already confirmed'});
+                return response.conflict(res, { message: 'user not found or account already confirmed' });
             }
         } catch (error) {
             return response.error(res, error);
