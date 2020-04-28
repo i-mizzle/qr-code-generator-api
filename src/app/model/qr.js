@@ -11,6 +11,10 @@ const qrCodesSchema = new mongoose.Schema({
     qrCodeUrl: {
         type: String,
     },
+    deleted: {
+        type: Boolean,
+        default: false
+    }
 }, {
     timestamps: true
 });

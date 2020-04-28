@@ -18,21 +18,37 @@ module.exports = {
             // return response.created(res, 'Wrote to ./qr.html')
 
             await s3.uploadBase64({
-                qrCodeData: req.body.qrCodeData, 
+                qrCodeData: req.body.qrCodeData,
                 base64Image: qrCode
             }, res)
-        } 
+        }
         catch (error) {
             return response.error(res, error)
         }
     },
 
     listAll: async (req, res) => {
-        try{
-            let qrCodes = await Qrcode.find();
+        try {
+            let qrCodes = await Qrcode.find({ deleted: false });
             return response.ok(res, qrCodes.reverse());
-        } catch(error) {
-             response.error(res, error);
+        } catch (error) {
+            response.error(res, error);
         }
     },
+
+    deleteOne: async (req, res) => {
+        try {
+            let qrCode = await Qrcode.findOne({ _id: req.params.id });
+            if (qrCode) {
+                qrCode.deleted = true
+                await qrCode.save()
+                return response.ok(res, "deleted successfully");
+
+            } else {
+                return response.notFound(res, { message: "Qr code not found" })
+            }
+        } catch (error) {
+            response.error(res, error);
+        }
+    }
 }

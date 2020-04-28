@@ -12,6 +12,7 @@ router.get('/user', isAuthenticated, user.getUserDetails);
 
 router.post('/qr/generate', qr.generateQRCode);
 router.get('/qr/list', isAuthenticated, qr.listAll);
+router.delete('/qr/delete/:id', isAuthenticated, qr.deleteOne);
 
 
 module.exports = router
